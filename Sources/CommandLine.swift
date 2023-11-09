@@ -30,6 +30,7 @@
 //
 
 import Foundation
+import Opaqueifier
 
 /// Public interface for the SwiftFormat command-line functions
 public enum CLI {}
@@ -203,6 +204,7 @@ func printHelp(as type: CLI.OutputType) {
     --lenient          Suppress errors for unformatted code in --lint mode
     --verbose          Display detailed formatting output and warnings/errors
     --quiet            Disables non-critical output messages and warnings
+    --swift6           Experimental preparation of project for Swift 6
 
     SwiftFormat has a number of rules that can be enabled or disabled. By default
     most rules are enabled. Use --rules to display all enabled/disabled rules.
@@ -406,6 +408,24 @@ func processArguments(_ args: [String], environment: [String: String] = [:], in 
             }
             return false
         } ?? false
+
+        if let project = args["swift6"] {
+            class LintOpaqueifier: Opaqueifier {
+                override func log(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+                    let line = items.map { "\($0)" }.joined( separator: separator)
+                    print(line+String(repeating: " ", count:
+                        max(0,79-line.count)), terminator: "\r")
+                }
+            }
+
+            let status = LintOpaqueifier().main(
+                projectPath: project,
+                xcode15Path: "/Applications/Xcode.app",
+                knownPotocols: [objcCocoaProtocols,
+                                objcUIKitProtocols])
+            print("")
+            exit(status)
+        }
 
         // Config file
         let configURL = try readConfigArg("config", with: &args, in: directory)

@@ -672,6 +672,7 @@ let commandLineArguments = [
     "version",
     "options",
     "ruleinfo",
+    "swift6",
 ] + optionsArguments
 
 let deprecatedArguments = Descriptors.all.compactMap {

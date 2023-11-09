@@ -1,5 +1,7 @@
 # Change Log
 
+- Added experimental --swift6 flag to prepare a project for Swift 6.
+
 ## [0.52.8](https://github.com/nicklockwood/SwiftFormat/releases/tag/0.52.8) (2023-10-17)
 
 - Fixed `redundantClosure` rule in cases where an `if`/`switch` expression is not permitted
